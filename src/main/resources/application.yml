@@ -1,0 +1,86 @@
+server:
+  #指定服务启动端口
+  port: 13200
+  compression:
+    enabled: true
+    mime-types: 'text/html,text/xml,text/css,text/javascript,text/plain'
+  tomcat:
+    max-connections: 1000
+    max-threads: 800
+
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html
+  boot:
+    admin:
+      client:
+        #服务在admin管理优先使用IP注册
+        prefer-ip: true
+  application:
+    name: 'micro-job'
+  profiles:
+    #设定默认激活的profile
+    active: local
+    include: interface
+
+management:
+  health:
+    redis:
+      enabled: false
+  security:
+    #管理后台安全认证关闭
+    enabled: false
+
+endpoints:
+  shutdown:
+    enabled: true     #启动shutdown
+    sensitive: false  #禁用密码验证
+
+security:
+  basic:
+    #禁用springboot安全
+    enabled: false
+
+encrypt:
+  #定义密码加密key值，将
+  key: xsjf123.com #或使用环境变量ENCRYPT_KEY将其从纯文本配置文件中删除
+
+logging:
+  #logback配置文件
+  config: classpath:logback-spring.xml
+  #日志文件名称
+  file: '@pom.name@'
+  #日志文件路径
+  path: '/xs/logs/@pom.name@/'
+  #日志文件级别（在bootstrap文件中可以配置默认值，可以在application.yml中进行覆盖，或是在执行的profile配置中覆盖）
+  #注意：不要修改此处配置，如果想修改执行环境的日志级别，可修改执行profile中的日志级别，覆盖此默认配置
+  #可选配置：TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
+  level:
+    root: INFO
+
+#项目信息，用info做前缀的配置将在admin管理后台中进行显示，属性可以自己定义没有强制要求，例如可以设置info.contact.email
+info:
+  build:
+    name: '@pom.name@'
+    description: '@pom.description@'
+    version: '@pom.version@'
+elasticjob:
+  notice-mobile-pattern: '[1][3578]\\d{9}'
+  enable: true
+  zookeeper:
+    server-lists: 127.0.0.1:2181
+    namespace: micro-job
+  job-collect: false
+
+---
+spring:
+  profiles: local
+
+#日志配置（此配置将覆盖bootstrap.yml中的配置）
+logging:
+  level: info
